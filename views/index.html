@@ -136,7 +136,7 @@
                             <h2><a href="#">Samsung Galaxy s5- 2015</a></h2>
                             
                             <div class="product-carousel-price">
-                                <ins>$700.00</ins> <del>$100.00</del>
+                                <ins>$700.00</ins> <del>$1000.00</del>
                             </div> 
                         </div>
                         <div class="single-product">
