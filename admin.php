@@ -1,5 +1,7 @@
 <?php 
 
+use \Hcode\Model\User;
+
 $app->get('/admin', function() {
     
 	User::verifyLogin();
