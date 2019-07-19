@@ -55,7 +55,7 @@ class Category extends Model {
 
 	}
 
-	public function updateFile(){
+	public static function updateFile(){
 
 		$categories = Category::listAll();
 
@@ -117,7 +117,7 @@ class Category extends Model {
 		$resultTotal = $sql->select("SELECT FOUND_ROWS() AS nrtotal;");
 
 		return [
-			'data'=>Product::checkList($results),
+			'data'=>Products::checkList($results),
 			'total'=>(int)$resultTotal[0]["nrtotal"],
 			'pages'=>ceil($resultTotal[0]["nrtotal"] / $itemsPerPage)
 		];
@@ -128,7 +128,7 @@ class Category extends Model {
 		$sql = new Sql();
 
 		$sql->query("INSERT INTO tb_productscategories(idcategory, idproduct) VALUES (:idcategory, :idproduct)",[
-			":idcategory"=>$this->getcategory(),
+			":idcategory"=>$this->getidcategory(),
 			":idproduct"=>$product->getidproduct()
 		]);
 	}
@@ -137,8 +137,8 @@ class Category extends Model {
 
 		$sql = new Sql();
 
-		$sql->query("DELETE FROM tb_productscategories WHERE idcategory =:idcategory AND idproduct = :idproduct",[
-			":idcategory"=>$this->getcategory(),
+		$sql->query("DELETE FROM tb_productscategories WHERE idcategory =:idcategory AND idproduct = :idproduct " ,[
+			":idcategory"=>$this->getidcategory(),
 			":idproduct"=>$product->getidproduct()
 		]);
 	}

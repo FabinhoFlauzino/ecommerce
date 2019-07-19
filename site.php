@@ -40,6 +40,7 @@ $app->get("/categories/:idcategory", function($idcategory){
 	$page->setTpl("category", [
 		'category'=>$category->getValues(),
 		'products'=>$pagination["data"],
+		'products'=>Products::checkList($category->getProducts()),
 		'pages'=>$pages
 	]);
 });
