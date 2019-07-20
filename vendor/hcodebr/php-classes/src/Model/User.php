@@ -12,9 +12,39 @@ class User extends Model {
 	const SECRET = "HcodePhp7_Secret";
 	const SECRET_IV = "HcodePhp7_Secret_IV";
 
-	protected $fields = [
+	/*protected $fields = [
 		"iduser", "idperson",  "deslogin", "despassword","desemail", "nrphone", "inadmin", "dtregister", "desperson"
-	];
+	];*/
+
+	public static function getFromSession()
+	{
+ 		$user = new User();
+ 		if (isset($_SESSION[User::SESSION]) && (int)$_SESSION[User::SESSION]['iduser'] > 0) {
+ 			$user->setData($_SESSION[User::SESSION]);
+ 		}
+ 		return $user;
+ 	}
+ 	public static function checkLogin($inadmin = true)
+	{
+ 		if (
+			!isset($_SESSION[User::SESSION])
+			||
+			!$_SESSION[User::SESSION]
+			||
+			!(int)$_SESSION[User::SESSION]["iduser"] > 0
+		) {
+			//Não está logado
+			return false;
+ 		} else {
+ 			if ($inadmin === true && (bool)$_SESSION[User::SESSION]['inadmin'] === true) {
+ 				return true;
+ 			} else if ($inadmin === false) {
+ 				return true;
+ 			} else {
+ 				return false;
+ 			}
+ 		}
+ 	}
 
 	public static function login($login, $password):User
 	{
@@ -65,15 +95,7 @@ class User extends Model {
 	public static function verifyLogin($inadmin = true)
 	{
 
-		if (
-			!isset($_SESSION[User::SESSION])
-			|| 
-			!$_SESSION[User::SESSION]
-			||
-			!(int)$_SESSION[User::SESSION]["iduser"] > 0
-			||
-			(bool)$_SESSION[User::SESSION]["iduser"] !== $inadmin
-		) {
+		if (!User::checkLogin($inadmin)) {
 			
 			header("Location: /admin/login");
 			exit;
