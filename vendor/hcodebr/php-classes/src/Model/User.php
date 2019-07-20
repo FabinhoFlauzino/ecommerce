@@ -12,9 +12,9 @@ class User extends Model {
 	const SECRET = "HcodePhp7_Secret";
 	const SECRET_IV = "HcodePhp7_Secret_IV";
 
-	/*protected $fields = [
+	protected $fields = [
 		"iduser", "idperson",  "deslogin", "despassword","desemail", "nrphone", "inadmin", "dtregister", "desperson"
-	];*/
+	];
 
 	public static function getFromSession()
 	{
