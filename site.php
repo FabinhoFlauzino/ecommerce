@@ -44,7 +44,7 @@ $app->get("/categories/:idcategory", function($idcategory){
 		'products'=>$pagination["data"],
 		'pages'=>$pages
 	]);
-});
+}); 
 
 $app->get("/products/:desurl", function($desurl){
 
