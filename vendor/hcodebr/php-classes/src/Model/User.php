@@ -11,6 +11,8 @@ class User extends Model {
 	const SESSION = "User";
 	const SECRET = "HcodePhp7_Secret";
 	const SECRET_IV = "HcodePhp7_Secret_IV";
+	const ERROR = "UserError";
+	const ERROR_REGISTER = "UserErrorRegister";
 
 	protected $fields = [
 		"iduser", "idperson",  "deslogin", "despassword","desemail", "nrphone", "inadmin", "dtregister", "desperson"
@@ -97,9 +99,12 @@ class User extends Model {
 
 		if (!User::checkLogin($inadmin)) {
 			
-			header("Location: /admin/login");
+			if($inadmin){
+				header("Location: /admin/login");
+			}else{
+				header("Location: /login");
+			}
 			exit;
-
 		}
 
 	}
@@ -122,9 +127,9 @@ class User extends Model {
 
 		$results = $sql->select("CALL sp_users_save(:desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin )",
 		array(
-			":desperson"=>$this->getdesperson(),
+			":desperson"=>utf8_decode($this->getdesperson()),
 			":deslogin"=>$this->getdeslogin(),
-			":despassword"=>$this->getdespassword(),
+			":despassword"=>$this->User::getPasswordHash($this->getdespassword()),
 			":desemail"=>$this->getdesemail(),
 			":nrphone"=>$this->getnrphone(),
 			":inadmin"=>$this->getinadmin()
@@ -140,9 +145,9 @@ class User extends Model {
 		$results = $sql->select("CALL sp_usersupdate_save(:iduser,:desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin )",
 		array(
 			":iduser"=>$this->getiduser(),
-			":desperson"=>$this->getdesperson(),
+			":desperson"=>$this->utf8_decode($this->getdesperson()),
 			":deslogin"=>$this->getdeslogin(),
-			":despassword"=>$this->getdespassword(),
+			":despassword"=>$this->User::getPasswordHash($this->getdespassword()),
 			":desemail"=>$this->getdesemail(),
 			":nrphone"=>$this->getnrphone(),
 			":inadmin"=>$this->getinadmin()
@@ -253,6 +258,35 @@ class User extends Model {
 			"iduser"=>$this->getiduser()
 		));
 	}
+
+	public static function setError($msg){
+
+		$_SESSION[User::ERROR] = $msg;
+
+	}
+
+	public static function getError(){
+
+		$msg = (isset($_SESSION[User::ERROR]) && $_SESSION[User::ERROR]) ? $_SESSION[User::ERROR] : '';
+
+		User::clearError();
+
+		return $msg;
+	}
+
+	public static function clearError(){
+
+		$_SESSION[User::ERROR] = NULL;
+
+	}
+
+	public static function setErrorRegister($msg){
+
+		$_SESSION[User::ERROR_REGISTER] = $msg;
+
+	}
+
+
 }
 
  ?>
