@@ -4,7 +4,8 @@ namespace Hcode\Model;
 
 use \Hcode\Model;
 use \Hcode\DB\Sql;
-use Hcode\Mailer;
+use \Hcode\Mailer;
+
 
 class User extends Model {
 
@@ -121,6 +122,15 @@ class User extends Model {
 		$this->setData($results[0]);
 	}
 
+	public static function getPasswordHash($password)
+	{
+ 
+		return password_hash($password, PASSWORD_DEFAULT, [
+			'cost'=>12
+		]);
+	
+	}
+
 	public function save(){
 
 		$sql = new Sql();
@@ -129,7 +139,7 @@ class User extends Model {
 		array(
 			":desperson"=>utf8_decode($this->getdesperson()),
 			":deslogin"=>$this->getdeslogin(),
-			":despassword"=>$this->User::getPasswordHash($this->getdespassword()),
+			":despassword"=>User::getPasswordHash($this->getdespassword()),
 			":desemail"=>$this->getdesemail(),
 			":nrphone"=>$this->getnrphone(),
 			":inadmin"=>$this->getinadmin()
@@ -147,7 +157,7 @@ class User extends Model {
 			":iduser"=>$this->getiduser(),
 			":desperson"=>$this->utf8_decode($this->getdesperson()),
 			":deslogin"=>$this->getdeslogin(),
-			":despassword"=>$this->User::getPasswordHash($this->getdespassword()),
+			":despassword"=>User::getPasswordHash($this->getdespassword()),
 			":desemail"=>$this->getdesemail(),
 			":nrphone"=>$this->getnrphone(),
 			":inadmin"=>$this->getinadmin()
@@ -283,6 +293,22 @@ class User extends Model {
 	public static function setErrorRegister($msg){
 
 		$_SESSION[User::ERROR_REGISTER] = $msg;
+
+	}
+
+	public static function getErrorRegister(){
+
+		$msg = (isset($_SESSION[User::ERROR_REGISTER]) && $_SESSION[User::ERROR_REGISTER]) ? $_SESSION[User::ERROR_REGISTER] : '';
+
+		User::clearErrorRegister();
+
+		return $msg;
+
+	}
+
+	public static function clearErrorRegister(){
+
+		$_SESSION[User::ERROR_REGISTER] = NULL;
 
 	}
 
