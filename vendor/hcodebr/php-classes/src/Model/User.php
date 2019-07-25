@@ -13,6 +13,7 @@ class User extends Model {
 	const SECRET = "HcodePhp7_Secret";
 	const SECRET_IV = "HcodePhp7_Secret_IV";
 	const ERROR = "UserError";
+	const SUCCESS = "UserSucesss";
 	const ERROR_REGISTER = "UserErrorRegister";
 
 	protected $fields = [
@@ -54,7 +55,7 @@ class User extends Model {
 
 		$sql = new Sql();
 
-		$results = $sql->select("SELECT * FROM tb_users WHERE deslogin = :LOGIN", array(
+		$results = $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b ON a.idperson = b.idperson WHERE a.deslogin = :LOGIN", array(
 			":LOGIN"=>$login
 		));
 
@@ -211,7 +212,7 @@ class User extends Model {
 					$link = "http://www.fabinhoflauzino.com.br/forgot/reset?code=$code";
 					
 				}				
-				$mailer = new Mailer($data['desemail'], $data['desperson'], "Redefinir senha da Hcode Store", "forgot", array(
+				$mailer = new Mailer($data['desemail'], $data['desperson'], "Redefinir senha da Fabinho Flauzino Store", "forgot", array(
 					"name"=>$data['desperson'],
 					"link"=>$link
 				));				
@@ -289,6 +290,22 @@ class User extends Model {
 		$_SESSION[User::ERROR] = NULL;
 
 	}
+
+	public static function setSuccess($msg)
+	{
+ 		$_SESSION[User::SUCCESS] = $msg;
+	}
+	 
+ 	public static function getSuccess()
+	{
+ 		$msg = (isset($_SESSION[User::SUCCESS]) && $_SESSION[User::SUCCESS]) ? $_SESSION[User::SUCCESS] : '';
+ 		User::clearSuccess();
+ 		return $msg;
+ 	}
+ 	public static function clearSuccess()
+	{
+ 		$_SESSION[User::SUCCESS] = NULL;
+ 	}
 
 	public static function setErrorRegister($msg){
 
